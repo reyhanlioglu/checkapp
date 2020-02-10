@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "884972342609",
+    "firebase_url": "https://checkapp-720ac.firebaseio.com",
+    "project_id": "checkapp-720ac",
+    "storage_bucket": "checkapp-720ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884972342609:android:4b65baf9c3542efba95770",
+        "android_client_info": {
+          "package_name": "com.emrereyhanlioglu.checkapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884972342609-2nrkc19i5qee2cavsu7vb0gbkegbkpt5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg5KJHKVihEIPcw1WRH5wXrd5nnOCwegs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884972342609-2nrkc19i5qee2cavsu7vb0gbkegbkpt5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
