@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared_pref_helper.dart';
 import '../fintness_app_theme.dart';
 
 class BodyMeasurementView extends StatelessWidget {
@@ -71,22 +72,34 @@ class BodyMeasurementView extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 4, bottom: 3),
-                                    child: Text(
-                                      '206.8',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: FintnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 32,
-                                        color: FintnessAppTheme.nearlyDarkBlue,
-                                      ),
+                                    child: FutureBuilder(
+                                      future:
+                                          getWeightFromPref(), // a Future<String> or null
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<double> weight) {
+                                        if (weight.hasData) {
+                                          return Text(
+                                            weight.data.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily:
+                                                  FintnessAppTheme.fontName,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 32,
+                                              color: FintnessAppTheme
+                                                  .nearlyDarkBlue,
+                                            ),
+                                          );
+                                        }
+                                        return Text("");
+                                      },
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         left: 8, bottom: 8),
                                     child: Text(
-                                      'Ibs',
+                                      'kgs',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: FintnessAppTheme.fontName,
@@ -174,16 +187,26 @@ class BodyMeasurementView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(
-                                  '185 cm',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: FintnessAppTheme.fontName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    letterSpacing: -0.2,
-                                    color: FintnessAppTheme.darkText,
-                                  ),
+                                FutureBuilder(
+                                  future:
+                                      getHeightFromPref(), // a Future<String> or null
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<double> height) {
+                                    if (height.hasData) {
+                                      return Text(
+                                        height.data.toString() + ' cm',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: FintnessAppTheme.fontName,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                          letterSpacing: -0.2,
+                                          color: FintnessAppTheme.darkText,
+                                        ),
+                                      );
+                                    }
+                                    return Text("");
+                                  },
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 6),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+final String sharedPrefWeight = "sharedPrefWeight";
+final String sharedPrefHeight = "sharedPrefHeight";
+
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,
   fontWeight: FontWeight.bold,

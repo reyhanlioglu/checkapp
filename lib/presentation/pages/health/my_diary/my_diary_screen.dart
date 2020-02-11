@@ -1,3 +1,4 @@
+import 'package:checkapp/presentation/pages/health/my_diary/edit_body_measurement.dart';
 import 'package:checkapp/presentation/pages/health/my_diary/water_view.dart';
 import 'package:checkapp/presentation/pages/health/ui_view/body_measurement.dart';
 import 'package:checkapp/presentation/pages/health/ui_view/glass_view.dart';
@@ -106,12 +107,18 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     listViews.add(
       TitleView(
         titleTxt: 'Body measurement',
-        subTxt: 'Today',
+        subTxt: 'Edit',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
                 Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
+        callback: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditBodyMeasurement()),
+          );
+        },
       ),
     );
 
