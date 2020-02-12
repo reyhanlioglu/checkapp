@@ -1,3 +1,4 @@
+import 'package:checkapp/presentation/pages/health/my_diary/bmi_calculator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared_pref_helper.dart';
@@ -7,11 +8,27 @@ class BodyMeasurementView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
 
+
   const BodyMeasurementView({Key key, this.animationController, this.animation})
       : super(key: key);
 
+
+
+  Future<double> calculateBMIField()async{
+    double weight = await getWeightFromPref();
+    double height = await getHeightFromPref();
+    var bmiCalculator = BMICalculator(weight, height);
+    var bmi = bmiCalculator.calculateBMI();
+    var bmiCategory = bmiCalculator.getBMICategory();
+    await saveBMI(bmi);
+    await saveBMICategory(bmiCategory);
+    return bmi;
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -234,29 +251,49 @@ class BodyMeasurementView extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Text(
-                                      '27.3 BMI',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: FintnessAppTheme.fontName,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                        letterSpacing: -0.2,
-                                        color: FintnessAppTheme.darkText,
-                                      ),
+                                    FutureBuilder(
+                                      future:
+                                      calculateBMIField(), // a Future<String> or null
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<double> bmi) {
+                                        if (bmi.hasData) {
+                                          return Text(
+                                            bmi.data.toStringAsFixed(2) + ' BMI',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: FintnessAppTheme.fontName,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                              letterSpacing: -0.2,
+                                              color: FintnessAppTheme.darkText,
+                                            ),
+                                          );
+                                        }
+                                        return Text("");
+                                      },
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6),
-                                      child: Text(
-                                        'Overweight',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: FintnessAppTheme.fontName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: FintnessAppTheme.grey
-                                              .withOpacity(0.5),
-                                        ),
+                                      child: FutureBuilder(
+                                        future:
+                                        getBMICategoryFromPref(), // a Future<String> or null
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<String> bmiCategory) {
+                                          if (bmiCategory.hasData) {
+                                            return Text(
+                                              bmiCategory.data,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: FintnessAppTheme.fontName,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 12,
+                                                color: FintnessAppTheme.grey
+                                                    .withOpacity(0.5),
+                                              ),
+                                            );
+                                          }
+                                          return Text("");
+                                        },
                                       ),
                                     ),
                                   ],

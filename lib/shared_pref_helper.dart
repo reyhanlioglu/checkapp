@@ -25,3 +25,26 @@ Future<double> getHeightFromPref() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getDouble(sharedPrefHeight);
 }
+
+Future<void> saveBMI(double bmi) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setDouble(sharedPrefBMI, bmi);
+  print('BMI is saved ($bmi)');
+}
+
+Future<double> getBMIFromPref() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getDouble(sharedPrefBMI);
+}
+
+
+Future<void> saveBMICategory(String category) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString(sharedPrefBMICategory, category);
+  print('BMI Category is saved ($category)');
+}
+
+Future<String> getBMICategoryFromPref() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString(sharedPrefBMICategory);
+}
