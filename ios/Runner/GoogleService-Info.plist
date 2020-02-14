@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>884972342609-gbgc8qe1ebvcte87ed47hoe7a55fh6fo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.884972342609-gbgc8qe1ebvcte87ed47hoe7a55fh6fo</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA3nW2Wdxzspl-Tdun5f0nnA_Cwn_tSk58</string>
+	<key>GCM_SENDER_ID</key>
+	<string>884972342609</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.emrereyhanlioglu.checkapp</string>
+	<key>PROJECT_ID</key>
+	<string>checkapp-720ac</string>
+	<key>STORAGE_BUCKET</key>
+	<string>checkapp-720ac.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:884972342609:ios:b57a505cc4f5659ca95770</string>
+	<key>DATABASE_URL</key>
+	<string>https://checkapp-720ac.firebaseio.com</string>
+</dict>
+</plist>
