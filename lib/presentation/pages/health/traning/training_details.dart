@@ -1,17 +1,72 @@
+import 'dart:async';
+
 import 'package:checkapp/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sensors/sensors.dart';
 
 class TrainingScreen extends StatefulWidget {
   static const String id = 'hearing_test_screen';
+  static final double TIMER_TOTAL_TIME = 30;
 
   @override
   _TrainingScreenState createState() => _TrainingScreenState();
 }
 
 class _TrainingScreenState extends State<TrainingScreen> {
-  int _elapsedTime = 0;
-  int _remainingTime = 30;
+  double _elapsedTime = 0;
+  double _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
+
+  // Sensor data variables
+  double gyroX, gyroY, gyroZ, accX, accY, accZ, uAccX, uAccY, uAccZ;
+
+  Timer _timer;
+  double _totalTime = TrainingScreen.TIMER_TOTAL_TIME;
+
+  void startTimer() async {
+    const period = const Duration(milliseconds: 250);
+    _timer = new Timer.periodic(period, (Timer timer) {
+      if (_remainingTime != 0) {
+        print('AccX:$accX, AccY:$accY, AccZ:$accZ');
+        _remainingTime -= 0.25;
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      accX = event.x;
+      accY = event.y;
+      accZ = event.z;
+    });
+// [AccelerometerEvent (x: 0.0, y: 9.8, z: 0.0)]
+
+    userAccelerometerEvents.listen((UserAccelerometerEvent event) {
+      uAccX = event.x;
+      uAccY = event.y;
+      uAccZ = event.z;
+    });
+// [UserAccelerometerEvent (x: 0.0, y: 0.0, z: 0.0)]
+
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      //print('Gyroscope event: $event');
+      gyroX = event.x;
+      gyroY = event.y;
+      gyroZ = event.z;
+    });
+// [GyroscopeEvent (x: 0.0, y: 0.0, z: 0.0)]
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +91,21 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     size: 40,
                   ),
                   'PAUSE TRAINING',
-                  () => {print('training')},
+                  () {
+                    print('training');
+                  },
                 ),
-                new IconCard(
+                IconCard(
                   Icon(
                     FontAwesomeIcons.stop,
                     size: 40,
                   ),
                   'STOP TRAINING',
-                  () => {},
+                  () {
+                    setState(() {
+                      _timer.cancel();
+                    });
+                  },
                 ),
               ],
             )),
@@ -59,6 +120,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       setState(() {
                         _remainingTime--;
                         _elapsedTime++;
+                        startTimer();
                       });
                     },
                     child: ReusableCard(
@@ -90,7 +152,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
             Expanded(
                 child: Row(
               children: <Widget>[
-                new IconCard(
+                IconCard(
                   Icon(
                     FontAwesomeIcons.stopwatch,
                     size: 40,
@@ -98,7 +160,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                   'ELAPSED TIME:\n00.${_elapsedTime.toString().padLeft(2, '0')}',
                   () => {},
                 ),
-                new IconCard(
+                IconCard(
                   Icon(
                     FontAwesomeIcons.stopwatch,
                     size: 40,
@@ -116,7 +178,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
 class IconCard extends StatelessWidget {
   final Icon icon;
   final String iconText;
-  final Function onTap;
+  final VoidCallback onTap;
 
   const IconCard(
     this.icon,
@@ -129,8 +191,8 @@ class IconCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       //Row:1 Col:1
-      child: GestureDetector(
-        onTap: () => onTap,
+      child: InkWell(
+        onTap: () => onTap(),
         child: ReusableCard(Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
