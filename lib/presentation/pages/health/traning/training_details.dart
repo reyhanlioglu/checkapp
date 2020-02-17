@@ -16,22 +16,40 @@ class TrainingScreen extends StatefulWidget {
 class _TrainingScreenState extends State<TrainingScreen> {
   double _elapsedTime = 0;
   double _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
+  bool _isFinished = true;
 
   // Sensor data variables
   double gyroX, gyroY, gyroZ, accX, accY, accZ, uAccX, uAccY, uAccZ;
 
+  // Timer for counting down
   Timer _timer;
-  double _totalTime = TrainingScreen.TIMER_TOTAL_TIME;
 
   void startTimer() async {
-    const period = const Duration(milliseconds: 250);
-    _timer = new Timer.periodic(period, (Timer timer) {
-      if (_remainingTime != 0) {
-        print('AccX:$accX, AccY:$accY, AccZ:$accZ');
-        _remainingTime -= 0.25;
-      } else {
-        timer.cancel();
-      }
+    if (_isFinished) {
+      _isFinished = false;
+      const period = const Duration(milliseconds: 250);
+      _timer = new Timer.periodic(period, (Timer timer) {
+        if (_remainingTime != 0) {
+          print('AccX:$accX, AccY:$accY, AccZ:$accZ');
+          setState(() {
+            _remainingTime -= 0.25;
+            _elapsedTime += 0.25;
+          });
+        } else {
+          // timer.cancel();
+          resetTimer();
+          // Navigate or setup graph
+        }
+      });
+    }
+  }
+
+  void resetTimer() {
+    setState(() {
+      _timer.cancel();
+      _isFinished = true;
+      _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
+      _elapsedTime = 0;
     });
   }
 
@@ -102,9 +120,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                   ),
                   'STOP TRAINING',
                   () {
-                    setState(() {
-                      _timer.cancel();
-                    });
+                    resetTimer();
                   },
                 ),
               ],
@@ -118,8 +134,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     onTap: () {
                       // START STOPWATCH
                       setState(() {
-                        _remainingTime--;
-                        _elapsedTime++;
                         startTimer();
                       });
                     },
@@ -157,7 +171,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     FontAwesomeIcons.stopwatch,
                     size: 40,
                   ),
-                  'ELAPSED TIME:\n00.${_elapsedTime.toString().padLeft(2, '0')}',
+                  'ELAPSED TIME:\n00.${_elapsedTime.toInt().toString().padLeft(2, '0')}',
                   () => {},
                 ),
                 IconCard(
@@ -165,7 +179,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     FontAwesomeIcons.stopwatch,
                     size: 40,
                   ),
-                  'REMAINING TIME:\n00.${_remainingTime.toString().padLeft(2, '0')}',
+                  'REMAINING TIME:\n00.${_remainingTime.toInt().toString().padLeft(2, '0')}',
                   () => {},
                 ),
               ],
