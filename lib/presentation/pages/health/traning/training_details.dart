@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:checkapp/app_theme.dart';
 import 'package:fl_animated_linechart/fl_animated_linechart.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sensors/sensors.dart';
 
@@ -10,7 +11,7 @@ import '../fintness_app_theme.dart';
 
 class TrainingScreen extends StatefulWidget {
   static const String id = 'hearing_test_screen';
-  static final double TIMER_TOTAL_TIME = 30;
+  static final double TIMER_TOTAL_TIME = 15;
 
   @override
   _TrainingScreenState createState() => _TrainingScreenState();
@@ -76,11 +77,27 @@ class _TrainingScreenState extends State<TrainingScreen> {
           });
         } else {
           stopTraining();
+          Fluttertoast.showToast(
+              msg: "Training is completed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       });
     } else {
       _isFinished = true;
       stopTraining();
+      Fluttertoast.showToast(
+          msg: "Training is stopped",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
