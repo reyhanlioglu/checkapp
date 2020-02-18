@@ -1,9 +1,12 @@
 import 'dart:async';
+
 import 'package:checkapp/app_theme.dart';
 import 'package:fl_animated_linechart/fl_animated_linechart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sensors/sensors.dart';
+
+import '../fintness_app_theme.dart';
 
 class TrainingScreen extends StatefulWidget {
   static const String id = 'hearing_test_screen';
@@ -14,9 +17,15 @@ class TrainingScreen extends StatefulWidget {
 }
 
 class _TrainingScreenState extends State<TrainingScreen> {
+  // Initilize
   double _elapsedTime = 0;
   double _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
   bool _isFinished = true;
+  String startStopButtonStatus = 'START TRAINING';
+  Icon startStopButtonIcon = Icon(
+    FontAwesomeIcons.play,
+    size: 50,
+  );
 
   // Sensor data variables
   double gyroX, gyroY, gyroZ, accX, accY, accZ, uAccX, uAccY, uAccZ;
@@ -59,20 +68,55 @@ class _TrainingScreenState extends State<TrainingScreen> {
             dataUAccY[currentTime] = uAccY;
             dataUAccZ[currentTime] = uAccZ;
 
+            startStopButtonStatus = "STOP TRAINING";
+            startStopButtonIcon = Icon(
+              FontAwesomeIcons.stop,
+              size: 50,
+            );
           });
         } else {
-          // timer.cancel();
-          resetTimer();
-          setState(() {
-            var dataArrays = [dataAccX,dataAccY, dataAccZ, dataUAccX, dataUAccY, dataUAccZ, dataGyroX, dataGyroY, dataGyroZ];
-            var dataColors = [Colors.green, Colors.lightGreen, Colors.lightGreenAccent, Colors.red, Colors.redAccent, Colors.deepOrangeAccent, Colors.blue, Colors.blueAccent, Colors.lightBlueAccent];
-            chart = LineChart.fromDateTimeMaps(
-                dataArrays, dataColors, ['C','C','C','C','C','C','C','C','C']);
-          });
-          // Navigate or setup graph
+          stopTraining();
         }
       });
+    } else {
+      _isFinished = true;
+      stopTraining();
     }
+  }
+
+  void stopTraining() {
+    resetTimer();
+    setState(() {
+      startStopButtonStatus = "RESTART TRAINING";
+      startStopButtonIcon = Icon(
+        FontAwesomeIcons.play,
+        size: 50,
+      );
+      var dataArrays = [
+        dataAccX,
+        dataAccY,
+        dataAccZ,
+        dataUAccX,
+        dataUAccY,
+        dataUAccZ,
+        dataGyroX,
+        dataGyroY,
+        dataGyroZ
+      ];
+      var dataColors = [
+        Colors.green,
+        Colors.lightGreen,
+        Colors.lightGreenAccent,
+        Colors.red,
+        Colors.redAccent,
+        Colors.deepOrangeAccent,
+        Colors.blue,
+        Colors.blueAccent,
+        Colors.lightBlueAccent
+      ];
+      chart = LineChart.fromDateTimeMaps(dataArrays, dataColors,
+          ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']);
+    });
   }
 
   void resetTimer() {
@@ -88,8 +132,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
   void initState() {
     super.initState();
 
-    chart = LineChart.fromDateTimeMaps(
-        [createEmptyData()], [Colors.green], ['C']);
+    chart =
+        LineChart.fromDateTimeMaps([createEmptyData()], [Colors.green], ['C']);
 
     accelerometerEvents.listen((AccelerometerEvent event) {
       accX = event.x;
@@ -121,17 +165,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   Map<DateTime, double> createEmptyData() {
-
     data[DateTime.now().subtract(Duration(minutes: 40))] = 0.0;
     data[DateTime.now().subtract(Duration(minutes: 30))] = 0.0;
-
-
     return data;
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: AppTheme.white,
         appBar: AppBar(
@@ -148,105 +188,94 @@ class _TrainingScreenState extends State<TrainingScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 8.0),
-                  child: AnimatedLineChart(
-                      chart,
-                      key: UniqueKey(),
-                    ),
-                ), //Unique key to force animations
-                ),
-            Expanded(
-              // TODO: Replace these 2 widgets with a current situation info widget
-                child: Row(
-              children: <Widget>[
-                IconCard(
-                  Icon(
-                    FontAwesomeIcons.pause,
-                    size: 30,
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '\t\t\tAccelerometer & Gyroscope Sensor Data',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: FintnessAppTheme.fontName,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    letterSpacing: 0.5,
+                    color: FintnessAppTheme.lightText,
                   ),
-                  'PAUSE TRAINING',
-                  () {
-                    print('training');
-                  },
                 ),
-                IconCard(
-                  Icon(
-                    FontAwesomeIcons.stop,
-                    size: 30,
-                  ),
-                  'STOP TRAINING',
-                  () {
-                    resetTimer();
-                  },
-                ),
-              ],
-            )),
+              ),
+            ),
             Expanded(
+              flex: 8,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 8.0),
+                child: AnimatedLineChart(
+                  chart,
+                  key: UniqueKey(),
+                ),
+              ), //Unique key to force animations
+            ),
+            Expanded(
+                flex: 4,
                 child: Row(
-              children: <Widget>[
-                Expanded(
-                  //Row:1 Col:1
-                  child: InkWell(
-                    onTap: () {
-                      // START STOPWATCH
-                      setState(() {
-                        startTimer();
-                      });
-                    },
-                    child: ReusableCard(
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            FontAwesomeIcons.play,
-                            size: 50,
+                  children: <Widget>[
+                    Expanded(
+                      //Row:1 Col:1
+                      child: InkWell(
+                        onTap: () {
+                          // START STOPWATCH
+                          setState(() {
+                            startTimer();
+                          });
+                        },
+                        child: ReusableCard(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              startStopButtonIcon,
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                startStopButtonStatus,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            'START TRAINING',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            )),
+                  ],
+                )),
             Expanded(
+                flex: 4,
                 child: Row(
-              children: <Widget>[
-                IconCard(
-                  Icon(
-                    FontAwesomeIcons.stopwatch,
-                    size: 30,
-                  ),
-                  'ELAPSED TIME:\n00.${_elapsedTime.toInt().toString().padLeft(2, '0')}',
-                  () => {},
-                ),
-                IconCard(
-                  Icon(
-                    FontAwesomeIcons.stopwatch,
-                    size: 30,
-                  ),
-                  'REMAINING TIME:\n00.${_remainingTime.toInt().toString().padLeft(2, '0')}',
-                  () => {},
-                ),
-              ],
-            )),
+                  children: <Widget>[
+                    IconCard(
+                      Icon(
+                        FontAwesomeIcons.stopwatch,
+                        size: 30,
+                      ),
+                      'ELAPSED TIME:\n00.${_elapsedTime.toInt().toString().padLeft(2, '0')}',
+                      () => {},
+                    ),
+                    IconCard(
+                      Icon(
+                        FontAwesomeIcons.stopwatch,
+                        size: 30,
+                      ),
+                      'REMAINING TIME:\n00.${_remainingTime.toInt().toString().padLeft(2, '0')}',
+                      () => {},
+                    ),
+                  ],
+                )),
           ],
         ));
   }
 }
-
-
 
 class IconCard extends StatelessWidget {
   final Icon icon;
