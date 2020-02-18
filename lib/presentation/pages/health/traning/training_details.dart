@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:checkapp/app_theme.dart';
+import 'package:fl_animated_linechart/fl_animated_linechart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sensors/sensors.dart';
@@ -24,6 +24,19 @@ class _TrainingScreenState extends State<TrainingScreen> {
   // Timer for counting down
   Timer _timer;
 
+  LineChart chart;
+  Map<DateTime, double> dataGyroX = {};
+  Map<DateTime, double> dataGyroY = {};
+  Map<DateTime, double> dataGyroZ = {};
+  Map<DateTime, double> dataAccX = {};
+  Map<DateTime, double> dataAccY = {};
+  Map<DateTime, double> dataAccZ = {};
+  Map<DateTime, double> dataUAccX = {};
+  Map<DateTime, double> dataUAccY = {};
+  Map<DateTime, double> dataUAccZ = {};
+
+  Map<DateTime, double> data = {};
+
   void startTimer() async {
     if (_isFinished) {
       _isFinished = false;
@@ -34,10 +47,28 @@ class _TrainingScreenState extends State<TrainingScreen> {
           setState(() {
             _remainingTime -= 0.25;
             _elapsedTime += 0.25;
+            var currentTime = DateTime.now();
+
+            dataGyroX[currentTime] = gyroX;
+            dataGyroY[currentTime] = gyroY;
+            dataGyroZ[currentTime] = gyroZ;
+            dataAccX[currentTime] = accX;
+            dataAccY[currentTime] = accY;
+            dataAccZ[currentTime] = accZ;
+            dataUAccX[currentTime] = uAccX;
+            dataUAccY[currentTime] = uAccY;
+            dataUAccZ[currentTime] = uAccZ;
+
           });
         } else {
           // timer.cancel();
           resetTimer();
+          setState(() {
+            var dataArrays = [dataAccX,dataAccY, dataAccZ, dataUAccX, dataUAccY, dataUAccZ, dataGyroX, dataGyroY, dataGyroZ];
+            var dataColors = [Colors.green, Colors.lightGreen, Colors.lightGreenAccent, Colors.red, Colors.redAccent, Colors.deepOrangeAccent, Colors.blue, Colors.blueAccent, Colors.lightBlueAccent];
+            chart = LineChart.fromDateTimeMaps(
+                dataArrays, dataColors, ['C','C','C','C','C','C','C','C','C']);
+          });
           // Navigate or setup graph
         }
       });
@@ -56,6 +87,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
   @override
   void initState() {
     super.initState();
+
+    chart = LineChart.fromDateTimeMaps(
+        [createEmptyData()], [Colors.green], ['C']);
 
     accelerometerEvents.listen((AccelerometerEvent event) {
       accX = event.x;
@@ -86,8 +120,18 @@ class _TrainingScreenState extends State<TrainingScreen> {
     _timer.cancel();
   }
 
+  Map<DateTime, double> createEmptyData() {
+
+    data[DateTime.now().subtract(Duration(minutes: 40))] = 0.0;
+    data[DateTime.now().subtract(Duration(minutes: 30))] = 0.0;
+
+
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         backgroundColor: AppTheme.white,
         appBar: AppBar(
@@ -99,14 +143,27 @@ class _TrainingScreenState extends State<TrainingScreen> {
           ),
         ),
         body: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 8.0),
+                  child: AnimatedLineChart(
+                      chart,
+                      key: UniqueKey(),
+                    ),
+                ), //Unique key to force animations
+                ),
+            Expanded(
+              // TODO: Replace these 2 widgets with a current situation info widget
                 child: Row(
               children: <Widget>[
                 IconCard(
                   Icon(
                     FontAwesomeIcons.pause,
-                    size: 40,
+                    size: 30,
                   ),
                   'PAUSE TRAINING',
                   () {
@@ -116,7 +173,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 IconCard(
                   Icon(
                     FontAwesomeIcons.stop,
-                    size: 40,
+                    size: 30,
                   ),
                   'STOP TRAINING',
                   () {
@@ -143,7 +200,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         children: <Widget>[
                           Icon(
                             FontAwesomeIcons.play,
-                            size: 70,
+                            size: 50,
                           ),
                           SizedBox(
                             height: 15,
@@ -169,7 +226,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 IconCard(
                   Icon(
                     FontAwesomeIcons.stopwatch,
-                    size: 40,
+                    size: 30,
                   ),
                   'ELAPSED TIME:\n00.${_elapsedTime.toInt().toString().padLeft(2, '0')}',
                   () => {},
@@ -177,7 +234,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 IconCard(
                   Icon(
                     FontAwesomeIcons.stopwatch,
-                    size: 40,
+                    size: 30,
                   ),
                   'REMAINING TIME:\n00.${_remainingTime.toInt().toString().padLeft(2, '0')}',
                   () => {},
@@ -188,6 +245,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
         ));
   }
 }
+
+
 
 class IconCard extends StatelessWidget {
   final Icon icon;
@@ -243,7 +302,7 @@ class ReusableCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.lightGreen),
+          borderRadius: BorderRadius.circular(10), color: Colors.blue[300]),
       child: widget,
     );
   }
