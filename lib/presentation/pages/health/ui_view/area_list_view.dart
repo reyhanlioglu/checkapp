@@ -1,3 +1,4 @@
+import 'package:checkapp/presentation/pages/health/traning/training_details.dart';
 import 'package:flutter/material.dart';
 
 import '../fintness_app_theme.dart';
@@ -72,6 +73,7 @@ class _AreaListViewState extends State<AreaListView>
                         imagepath: areaListData[index],
                         animation: animation,
                         animationController: animationController,
+                        index: index,
                       );
                     },
                   ),
@@ -97,11 +99,13 @@ class AreaView extends StatelessWidget {
     this.imagepath,
     this.animationController,
     this.animation,
+    this.index,
   }) : super(key: key);
 
   final String imagepath;
   final AnimationController animationController;
   final Animation<dynamic> animation;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +140,15 @@ class AreaView extends StatelessWidget {
                   hoverColor: Colors.transparent,
                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   splashColor: FintnessAppTheme.nearlyDarkBlue.withOpacity(0.2),
-                  onTap: () {},
+                  onTap: () {
+                    if (index == 2) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrainingScreen()),
+                      );
+                    }
+                  },
                   child: Column(
                     children: <Widget>[
                       Padding(

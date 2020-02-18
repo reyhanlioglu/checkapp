@@ -27,6 +27,8 @@ dependencies:
   cloud_firestore: ^0.12.10
   font_awesome_flutter: ^8.4.0
   shared_preferences: ^0.4.3
+  sensors: ^0.4.1+7
+  fl_animated_linechart: ^1.0.2
 
 
 

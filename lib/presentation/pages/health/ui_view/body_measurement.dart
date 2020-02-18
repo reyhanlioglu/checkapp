@@ -8,13 +8,10 @@ class BodyMeasurementView extends StatelessWidget {
   final AnimationController animationController;
   final Animation animation;
 
-
   const BodyMeasurementView({Key key, this.animationController, this.animation})
       : super(key: key);
 
-
-
-  Future<double> calculateBMIField()async{
+  Future<double> calculateBMIField() async {
     double weight = await getWeightFromPref();
     double height = await getHeightFromPref();
     var bmiCalculator = BMICalculator(weight, height);
@@ -27,8 +24,6 @@ class BodyMeasurementView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return AnimatedBuilder(
       animation: animationController,
       builder: (BuildContext context, Widget child) {
@@ -253,15 +248,17 @@ class BodyMeasurementView extends StatelessWidget {
                                   children: <Widget>[
                                     FutureBuilder(
                                       future:
-                                      calculateBMIField(), // a Future<String> or null
+                                          calculateBMIField(), // a Future<String> or null
                                       builder: (BuildContext context,
                                           AsyncSnapshot<double> bmi) {
                                         if (bmi.hasData) {
                                           return Text(
-                                            bmi.data.toStringAsFixed(2) + ' BMI',
+                                            bmi.data.toStringAsFixed(2) +
+                                                ' BMI',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontFamily: FintnessAppTheme.fontName,
+                                              fontFamily:
+                                                  FintnessAppTheme.fontName,
                                               fontWeight: FontWeight.w500,
                                               fontSize: 16,
                                               letterSpacing: -0.2,
@@ -276,7 +273,7 @@ class BodyMeasurementView extends StatelessWidget {
                                       padding: const EdgeInsets.only(top: 6),
                                       child: FutureBuilder(
                                         future:
-                                        getBMICategoryFromPref(), // a Future<String> or null
+                                            getBMICategoryFromPref(), // a Future<String> or null
                                         builder: (BuildContext context,
                                             AsyncSnapshot<String> bmiCategory) {
                                           if (bmiCategory.hasData) {
@@ -284,7 +281,8 @@ class BodyMeasurementView extends StatelessWidget {
                                               bmiCategory.data,
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                fontFamily: FintnessAppTheme.fontName,
+                                                fontFamily:
+                                                    FintnessAppTheme.fontName,
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 12,
                                                 color: FintnessAppTheme.grey
@@ -311,7 +309,7 @@ class BodyMeasurementView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Text(
-                                      '20%',
+                                      '',
                                       style: TextStyle(
                                         fontFamily: FintnessAppTheme.fontName,
                                         fontWeight: FontWeight.w500,
@@ -323,7 +321,7 @@ class BodyMeasurementView extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 6),
                                       child: Text(
-                                        'Body fat',
+                                        '',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: FintnessAppTheme.fontName,
