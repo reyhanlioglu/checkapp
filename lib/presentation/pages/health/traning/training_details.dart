@@ -9,18 +9,18 @@ import 'package:sensors/sensors.dart';
 
 import '../fintness_app_theme.dart';
 
-class TrainingScreen extends StatefulWidget {
+class TrainingDetailScreen extends StatefulWidget {
   static const String id = 'hearing_test_screen';
   static final double TIMER_TOTAL_TIME = 15;
 
   @override
-  _TrainingScreenState createState() => _TrainingScreenState();
+  _TrainingDetailScreenState createState() => _TrainingDetailScreenState();
 }
 
-class _TrainingScreenState extends State<TrainingScreen> {
+class _TrainingDetailScreenState extends State<TrainingDetailScreen> {
   // Initilize
   double _elapsedTime = 0;
-  double _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
+  double _remainingTime = TrainingDetailScreen.TIMER_TOTAL_TIME;
   bool _isFinished = true;
   String startStopButtonStatus = 'START TRAINING';
   Icon startStopButtonIcon = Icon(
@@ -140,7 +140,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
     setState(() {
       _timer.cancel();
       _isFinished = true;
-      _remainingTime = TrainingScreen.TIMER_TOTAL_TIME;
+      _remainingTime = TrainingDetailScreen.TIMER_TOTAL_TIME;
       _elapsedTime = 0;
     });
   }

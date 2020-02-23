@@ -1,6 +1,6 @@
+import 'package:checkapp/presentation/pages/health/pose_estimation/exercise.dart';
 import 'package:checkapp/presentation/pages/health/traning/training_details.dart';
 import 'package:flutter/material.dart';
-
 import '../fintness_app_theme.dart';
 
 class AreaListView extends StatefulWidget {
@@ -141,11 +141,16 @@ class AreaView extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                   splashColor: FintnessAppTheme.nearlyDarkBlue.withOpacity(0.2),
                   onTap: () {
-                    if (index == 2) {
+                    if (index == 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CameraApp()),
+                      );
+                    } else if (index == 2) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TrainingScreen()),
+                            builder: (context) => TrainingDetailScreen()),
                       );
                     }
                   },
