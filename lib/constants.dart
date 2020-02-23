@@ -4,7 +4,7 @@ final String sharedPrefWeight = "sharedPrefWeight";
 final String sharedPrefHeight = "sharedPrefHeight";
 final String sharedPrefBMI = 'sharedPrefBMI';
 final String sharedPrefBMICategory = "sharedPrefBMICategory";
-
+final String sharedPrefID = "sharedPrefID";
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,

@@ -4,6 +4,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants.dart';
 
+Future<void> saveUserID(String id) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString(sharedPrefID, id);
+  print('User ID is saved ($id)');
+}
+
+Future<String> getUserIDFromPref() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString(sharedPrefID);
+}
+
 Future<void> saveWeight(double weight) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setDouble(sharedPrefWeight, weight);
@@ -36,7 +47,6 @@ Future<double> getBMIFromPref() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getDouble(sharedPrefBMI);
 }
-
 
 Future<void> saveBMICategory(String category) async {
   final prefs = await SharedPreferences.getInstance();

@@ -2,6 +2,8 @@ import 'package:checkapp/presentation/pages/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../shared_pref_helper.dart';
+
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
 
@@ -104,6 +106,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           await _auth.createUserWithEmailAndPassword(
                               email: email, password: password);
                       if (newUser != null) {
+                        saveUserID(newUser.user.uid);
                         Navigator.pushNamed(context, HomeScreen.id);
                       }
                     },

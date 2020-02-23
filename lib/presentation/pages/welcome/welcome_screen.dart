@@ -1,6 +1,9 @@
+import 'package:checkapp/presentation/pages/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:checkapp/presentation/pages/login/login_screen.dart';
 import 'package:checkapp/presentation/pages/login/registration_screen.dart';
+
+import '../../../shared_pref_helper.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -10,6 +13,19 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    checkCurrentUser();
+  }
+
+  void checkCurrentUser() async {
+    var userID = await getUserIDFromPref();
+    if (userID != null) {
+      Navigator.pushNamed(context, HomeScreen.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

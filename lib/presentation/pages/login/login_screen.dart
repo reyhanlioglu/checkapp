@@ -1,4 +1,5 @@
 import 'package:checkapp/presentation/pages/home/home_screen.dart';
+import 'package:checkapp/shared_pref_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +13,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email, password;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       if (user != null) {
+                        saveUserID(user.user.uid);
                         Navigator.pushNamed(context, HomeScreen.id);
                       }
                     } catch (e) {
